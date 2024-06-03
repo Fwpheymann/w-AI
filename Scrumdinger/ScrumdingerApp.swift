@@ -9,20 +9,29 @@ import SwiftUI
 
 @main
 struct ScrumdingerApp: App {
-    @ObservedObject private var data = ScrumData()
     var body: some Scene {
         WindowGroup {
             NavigationView {
                 List {
                     NavigationLink(destination: TextWithAI()) {
+                        if #available(iOS 17.0, *) {
                             Text("Text With AI")
+                                .foregroundStyle(.green)
+                        } else {
+                            // Fallback on earlier versions
+                        }
+                        }
+                    NavigationLink(destination: ImagesWithAI()) {
+                        if #available(iOS 17.0, *) {
+                            Text("Create Images With AI")
+                                .foregroundStyle(.green)
+                        } else {
+                            // Fallback on earlier versions
+                        }
+                            }
                         }
                     }
                 }
-            .onAppear {
-                data.load()
-            }
-        }
     }
 }
 

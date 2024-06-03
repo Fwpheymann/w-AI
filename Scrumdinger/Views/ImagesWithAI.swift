@@ -1,20 +1,20 @@
 //
-//  ChatBotMain.swift
+//  ImagesWithAI.swift
 //  Scrumdinger
 //
-//  Created by Franklin Heymann on 5/23/24.
+//  Created by Franklin Heymann on 5/30/24.
 //
 
 import SwiftUI
 import OpenAI
 
-class ChatController: ObservableObject {
-    @Published var messages: [Message] = [.init(content: "Hello", isUser: true), .init(content: "Hello", isUser: false)]
+class ImageController: ObservableObject {
+    @Published var messages: [Prompt] = [.init(content: "Hello", isUser: true), .init(content: "Hello", isUser: false)]
     
     let openAI = OpenAI(apiToken:"sk-proj-H0LiapYVtCldjboiRYFeT3BlbkFJnVMzTj9rw8kU9k2uJxta")
     
     func sendNewMessage(content: String) {
-        let userMessage = Message(content: content, isUser: true)
+        let userMessage = Prompt(content: content, isUser: true)
         self.messages.append(userMessage)
         getBotReply()
     }
@@ -24,7 +24,7 @@ class ChatController: ObservableObject {
             messages: self.messages.map({
                 .init(role: .user, content: $0.content)!
             }),
-            model: .gpt3_5Turbo
+            model: .dall_e_3
         )
         openAI.chats(query: query) { result in
             switch result {
@@ -34,7 +34,7 @@ class ChatController: ObservableObject {
                 }
                 guard let message = choice.message.content?.string else { return }
                 DispatchQueue.main.async {
-                    self.messages.append(Message(content: message, isUser: false))
+                    self.messages.append(Prompt(content: message, isUser: false))
                 }
             case .failure(let failure):
                 print(failure)
@@ -42,13 +42,13 @@ class ChatController: ObservableObject {
         }
     }
 }
-struct Message: Identifiable {
+struct Prompt: Identifiable {
     var id: UUID = .init()
     var content: String
     var isUser: Bool
 }
 
-struct TextWithAI: View {
+struct ImagesWithAI: View {
     @StateObject var chatController: ChatController = .init()
     @State var string: String = ""
     var body: some View {
@@ -84,8 +84,8 @@ struct TextWithAI: View {
 }
 
 
-struct MessageView: View {
-    @Binding var message: Message
+struct ImageView: View {
+    @Binding var message: Prompt
     var body: some View {
         Group {
             if message.isUser {
@@ -99,7 +99,7 @@ struct MessageView: View {
                 }
             } else {
                 HStack {
-                    Text(message.content)
+                    Image(message.content)
                         .padding()
                         .background(Color.green)
                         .foregroundColor(Color.white)
@@ -112,6 +112,6 @@ struct MessageView: View {
 }
 
 #Preview {
-    TextWithAI()
+    ImagesWithAI()
 }
 
