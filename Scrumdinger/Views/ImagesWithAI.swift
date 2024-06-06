@@ -10,9 +10,9 @@ import SwiftUI
 import OpenAI
 
 class ImageController: ObservableObject {
-    @Published var messages: [Prompt] = [.init(content: "Hello", isUser: true), .init(content: "Hello", isUser: false)]
+    @Published var messages: [Prompt] = []
     
-    let openAI = OpenAI(apiToken:"")
+    let openAI = OpenAI(apiToken:"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")
     
     func sendNewMessage(content: String) {
         let userMessage = Prompt(content: content, isUser: true)
@@ -25,11 +25,13 @@ class ImageController: ObservableObject {
             messages: self.messages.map({
                 .init(role: .user, content: $0.content)!
             }),
-            model: .dall_e_3
+            model: .dall_e_2
         )
+//        print(openAI.models.)
         openAI.chats(query: query) { result in
             switch result {
             case .success(let success):
+                print("success")
                 guard let choice = success.choices.first else {
                     return
                 }
@@ -50,14 +52,15 @@ struct Prompt: Identifiable {
 }
 
 struct ImagesWithAI: View {
-    @StateObject var chatController: ChatController = .init()
+    @StateObject var imageController: ImageController = .init()
     @State var string: String = ""
     var body: some View {
+        Text("ImagesWithAI")
         VStack {
             ScrollView {
-                ForEach($chatController.messages) {
+                ForEach($imageController.messages) {
                     message in
-                    MessageView(message: message)
+                    ImageView(message: message)
                         .padding(5)
                 }
             }
@@ -72,7 +75,7 @@ struct ImagesWithAI: View {
                     // Fallback on earlier versions
                 }
                 Button {
-                    self.chatController.sendNewMessage(content: string)
+                    self.imageController.sendNewMessage(content: string)
                     string = ""
                 } label: {
                     Image(systemName: "paperplane")

@@ -11,6 +11,7 @@ struct ScrumdingerApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
+                Text(" AI Inc.")
                 List {
                     NavigationLink(destination: TextWithAI()) {
                         if #available(iOS 17.0, *) {

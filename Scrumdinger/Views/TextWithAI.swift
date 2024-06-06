@@ -9,9 +9,9 @@ import SwiftUI
 import OpenAI
 
 class ChatController: ObservableObject {
-    @Published var messages: [Message] = [.init(content: "Hello", isUser: true), .init(content: "Hello", isUser: false)]
+    @Published var messages: [Message] = []
     
-    let openAI = OpenAI(apiToken:"")
+    let openAI = OpenAI(apiToken:"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")
     
     func sendNewMessage(content: String) {
         let userMessage = Message(content: content, isUser: true)
@@ -29,6 +29,7 @@ class ChatController: ObservableObject {
         openAI.chats(query: query) { result in
             switch result {
             case .success(let success):
+                print("success")
                 guard let choice = success.choices.first else {
                     return
                 }
@@ -52,6 +53,7 @@ struct TextWithAI: View {
     @StateObject var chatController: ChatController = .init()
     @State var string: String = ""
     var body: some View {
+        Text("TextWithAI")
         VStack {
             ScrollView {
                 ForEach($chatController.messages) {
