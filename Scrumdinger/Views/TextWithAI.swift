@@ -56,10 +56,6 @@ struct TextWithAI: View {
         Text("TextWithAI")
         VStack {
             ScrollView {
-                ForEach($chatController.messages) {
-                    message in
-                    MessageView(message: message)
-                        .padding(5)
                 }
             }
             Divider()
@@ -97,7 +93,8 @@ struct MessageView: View {
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(Color.white)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(radius: 10)
                 }
             } else {
                 HStack {
@@ -105,7 +102,8 @@ struct MessageView: View {
                         .padding()
                         .background(Color.green)
                         .foregroundColor(Color.white)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(radius: 10)
                     Spacer()
                 }
             }
