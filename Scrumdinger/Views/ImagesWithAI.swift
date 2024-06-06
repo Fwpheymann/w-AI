@@ -12,7 +12,7 @@ import OpenAI
 class ImageController: ObservableObject {
     @Published var messages: [Prompt] = []
     
-    let openAI = OpenAI(apiToken:"")
+    let openAI = OpenAI()
     
     func sendNewMessage(content: String) {
         let userMessage = Prompt(content: content, isUser: true)
