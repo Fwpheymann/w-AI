@@ -12,7 +12,7 @@ import OpenAI
 class ImageController: ObservableObject {
     @Published var messages: [Prompt] = []
     
-    let openAI = OpenAI()
+    let openAI = OpenAI(apiToken: "")
     
     func sendNewMessage(content: String) {
         let userMessage = Prompt(content: content, isUser: true)
@@ -57,12 +57,18 @@ struct ImagesWithAI: View {
     var body: some View {
         Text("ImagesWithAI")
         VStack {
-            ScrollView {
+            let scroll = ScrollView {
                 ForEach($imageController.messages) {
                     message in
                     ImageView(message: message)
                         .padding(5)
                 }
+            }
+            // Scroll the chat to the bottom
+            if #available(iOS 17.0, *) {
+                scroll.defaultScrollAnchor(.bottom)
+            } else {
+                // Fallback on earlier versions
             }
             Divider()
             HStack {
@@ -99,7 +105,8 @@ struct ImageView: View {
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(Color.white)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(radius: 10)
                 }
             } else {
                 HStack {
@@ -107,7 +114,8 @@ struct ImageView: View {
                         .padding()
                         .background(Color.green)
                         .foregroundColor(Color.white)
-                        .clipShape(Capsule())
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(radius: 10)
                     Spacer()
                 }
             }

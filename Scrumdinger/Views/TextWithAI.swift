@@ -11,7 +11,7 @@ import OpenAI
 class ChatController: ObservableObject {
     @Published var messages: [Message] = []
     
-    let openAI = OpenAI()
+    let openAI = OpenAI(apiToken: "")
     
     func sendNewMessage(content: String) {
         let userMessage = Message(content: content, isUser: true)
@@ -55,9 +55,20 @@ struct TextWithAI: View {
     var body: some View {
         Text("TextWithAI")
         VStack {
-            ScrollView {
+            let scroll = ScrollView {
+                ForEach($chatController.messages) {
+                    message in
+                    MessageView(message: message)
+                        .padding(5)
                 }
             }
+            // Scroll the chat to the bottom
+            if #available(iOS 17.0, *) {
+                scroll.defaultScrollAnchor(.bottom)
+            } else {
+                // Fallback on earlier versions
+            }
+            
             Divider()
             HStack {
                 if #available(iOS 16.0, *) {
